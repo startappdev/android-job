@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.evernote.android.job.gcm.PlatformGcmService;
 import com.evernote.android.job.util.JobApi;
 import com.evernote.android.job.v14.PlatformAlarmService;
 import com.evernote.android.job.v21.PlatformJobService;
@@ -53,11 +52,6 @@ public class PlatformTest {
     }
 
     @Test
-    public void testApiGcm() throws Exception {
-        testOneOff(JobApi.GCM, 40, TimeUnit.SECONDS);
-    }
-
-    @Test
     public void testApi21() throws Exception {
         testOneOff(JobApi.V_21);
     }
@@ -88,9 +82,6 @@ public class PlatformTest {
             case V_14:
             case V_19:
                 mJob = new TestJob(PlatformAlarmService.class);
-                break;
-            case GCM:
-                mJob = new TestJob(PlatformGcmService.class);
                 break;
             case V_21:
             case V_24:

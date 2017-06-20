@@ -54,12 +54,12 @@ public class MainActivity extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mNetworkTypeSpinner.setAdapter(adapter);
 
-        mEnableGcm.setChecked(mJobManager.getConfig().isGcmApiEnabled());
-        mEnableGcm.setEnabled(JobApi.GCM.isSupported(this));
+        mEnableGcm.setChecked(false);
+        mEnableGcm.setEnabled(false);
         mEnableGcm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mJobManager.getConfig().setGcmApiEnabled(isChecked);
+//                mJobManager.getConfig().setGcmApiEnabled(isChecked);
             }
         });
     }
@@ -100,11 +100,6 @@ public class MainActivity extends Activity {
         } else {
             menu.findItem(R.id.action_force_14).setVisible(false);
         }
-        if (JobApi.GCM.isSupported(this)) {
-            menu.findItem(R.id.action_force_gcm).setChecked(false);
-        } else {
-            menu.findItem(R.id.action_force_gcm).setVisible(false);
-        }
 
         switch (mJobManager.getApi()) {
             case V_24:
@@ -118,9 +113,6 @@ public class MainActivity extends Activity {
                 break;
             case V_14:
                 menu.findItem(R.id.action_force_14).setChecked(true);
-                break;
-            case GCM:
-                menu.findItem(R.id.action_force_gcm).setChecked(true);
                 break;
             default:
                 throw new IllegalStateException("not implemented");
@@ -143,9 +135,6 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.action_force_14:
                 mJobManager.forceApi(JobApi.V_14);
-                return true;
-            case R.id.action_force_gcm:
-                mJobManager.forceApi(JobApi.GCM);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

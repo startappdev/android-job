@@ -42,7 +42,6 @@ import com.evernote.android.job.util.JobApi;
 import com.evernote.android.job.util.JobCat;
 import com.evernote.android.job.util.JobPreconditions;
 import com.evernote.android.job.util.JobUtil;
-import com.google.android.gms.gcm.GcmNetworkManager;
 
 import net.vrallev.android.cat.CatLog;
 
@@ -52,11 +51,7 @@ import java.util.Set;
 /**
  * Entry point for scheduling jobs. Depending on the platform and SDK version it uses different APIs
  * to schedule jobs. The {@link JobScheduler} is preferred, if the OS is running Lollipop or above.
- * Otherwise it uses the {@link AlarmManager} as fallback. It's also possible to use the
- * {@link GcmNetworkManager}, if the manager can be found in your classpath, the Google Play Services
- * are installed and the service was added in the manifest. Take a look at the
- * <a href="https://github.com/evernote/android-job#using-the-gcmnetworkmanager">README</a> for more
- * help.
+ * Otherwise it uses the {@link AlarmManager} as fallback.
  *
  * <br>
  * <br>
@@ -179,7 +174,7 @@ public final class JobManager {
         mJobExecutor = new JobExecutor();
         mConfig = new Config();
 
-        JobApi api = JobApi.getDefault(mContext, mConfig.isGcmApiEnabled());
+        JobApi api = JobApi.getDefault(mContext);
         if (api == JobApi.V_14 && !api.isSupported(mContext)) {
             throw new JobManagerCreateException("All APIs are disabled, cannot schedule any job");
         }
@@ -226,11 +221,6 @@ public final class JobManager {
         JobApi jobApi = request.getJobApi();
         boolean periodic = request.isPeriodic();
         boolean flexSupport = periodic && jobApi.isFlexSupport() && request.getFlexMs() < request.getIntervalMs();
-
-        if (jobApi == JobApi.GCM && !mConfig.isGcmApiEnabled()) {
-            // shouldn't happen
-            CAT.w("GCM API disabled, but used nonetheless");
-        }
 
         request.setScheduledAt(System.currentTimeMillis());
         request.setFlexSupport(flexSupport);
@@ -542,44 +532,6 @@ public final class JobManager {
          */
         public void setVerbose(boolean verbose) {
             JobCat.setLogcatEnabled(verbose);
-        }
-
-        /**
-         * @return Whether the GCM API is enabled. The API is only used if the required class dependency
-         * is found, the Google Play Services are available and this setting is {@code true}. The default
-         * value is {@code true}.
-         */
-        public boolean isGcmApiEnabled() {
-            return mGcmEnabled;
-        }
-
-        /**
-         * Programmatic switch to disable the GCM API. If {@code false}, then the {@link AlarmManager} will
-         * be used for Android 4 devices in all cases.
-         *
-         * @param enabled Whether the GCM API should be enabled or disabled. Note that the API is only used,
-         *                if the required class dependency is found, the Google Play Services are available
-         *                and this setting is {@code true}. The default value is {@code true}.
-         */
-        public void setGcmApiEnabled(boolean enabled) {
-            if (enabled == mGcmEnabled) {
-                return;
-            }
-
-            mGcmEnabled = enabled;
-            if (enabled) {
-                JobApi defaultApi = JobApi.getDefault(mContext, true);
-                if (!defaultApi.equals(getApi())) {
-                    setJobProxy(defaultApi);
-                    CAT.i("Changed default proxy to %s after enabled the GCM API", defaultApi);
-                }
-            } else {
-                JobApi defaultApi = JobApi.getDefault(mContext, false);
-                if (JobApi.GCM == getApi()) {
-                    setJobProxy(defaultApi);
-                    CAT.i("Changed default proxy to %s after disabling the GCM API", defaultApi);
-                }
-            }
         }
 
         /**

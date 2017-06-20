@@ -21,9 +21,5 @@
             android:id="@+id/action_force_14"
             android:title="v14"
             app:showAsAction="never"/>
-        <item
-            android:id="@+id/action_force_gcm"
-            android:title="GCM"
-            app:showAsAction="never"/>
     </group>
 </menu>

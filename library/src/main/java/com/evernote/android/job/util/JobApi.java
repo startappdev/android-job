@@ -35,10 +35,8 @@ import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.evernote.android.job.JobProxy;
-import com.evernote.android.job.gcm.JobProxyGcm;
 import com.evernote.android.job.v14.JobProxy14;
 import com.evernote.android.job.v14.PlatformAlarmReceiver;
 import com.evernote.android.job.v14.PlatformAlarmService;
@@ -46,7 +44,6 @@ import com.evernote.android.job.v19.JobProxy19;
 import com.evernote.android.job.v21.JobProxy21;
 import com.evernote.android.job.v21.PlatformJobService;
 import com.evernote.android.job.v24.JobProxy24;
-import com.google.android.gms.gcm.GcmNetworkManager;
 
 import java.util.List;
 
@@ -71,12 +68,7 @@ public enum JobApi {
     /**
      * Uses the {@link AlarmManager} for scheduling jobs.
      */
-    V_14(false, true),
-    /**
-     * Uses the {@link GcmNetworkManager} for scheduling jobs.
-     */
-    GCM(true, false);
-
+    V_14(false, true);
     private static final String JOB_SCHEDULER_PERMISSION = "android.permission.BIND_JOB_SERVICE";
 
     private static volatile boolean forceAllowApi14 = false;
@@ -142,8 +134,6 @@ public enum JobApi {
             case V_14:
                 return forceAllowApi14
                         || (isServiceEnabled(context, PlatformAlarmService.class) && isBroadcastEnabled(context, PlatformAlarmReceiver.class));
-            case GCM:
-                return GcmAvailableHelper.isGcmApiSupported(context);
             default:
                 throw new IllegalStateException("not implemented");
         }
@@ -160,8 +150,6 @@ public enum JobApi {
                 return new JobProxy19(context);
             case V_14:
                 return new JobProxy14(context);
-            case GCM:
-                return new JobProxyGcm(context);
             default:
                 throw new IllegalStateException("not implemented");
         }
@@ -221,24 +209,13 @@ public enum JobApi {
         }
     }
 
-    /**
-     * @deprecated Use {@link #getDefault(Context, boolean)} instead.
-     */
-    @SuppressWarnings("unused")
-    @NonNull
-    @Deprecated
-    public static JobApi getDefault(Context context) {
-        return getDefault(context, JobManager.instance().getConfig().isGcmApiEnabled());
-    }
 
     @NonNull
-    public static JobApi getDefault(Context context, boolean gcmEnabled) {
+    public static JobApi getDefault(Context context) {
         if (V_24.isSupported(context)) {
             return V_24;
         } else if (V_21.isSupported(context)) {
             return V_21;
-        } else if (gcmEnabled && GCM.isSupported(context)) {
-            return GCM;
         } else if (V_19.isSupported(context)) {
             return V_19;
         } else {

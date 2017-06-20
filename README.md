@@ -1,6 +1,6 @@
 # Android-Job
 
-A utility library for Android to run jobs delayed in the background. Depending on the Android version either the `JobScheduler`, `GcmNetworkManager` or `AlarmManager` is getting used. You can find out in [this blog post](https://blog.evernote.com/tech/2015/10/26/unified-job-library-android/) or in [these slides](https://speakerdeck.com/vrallev/scheduling-background-job-on-android-at-the-right-time-1) why you should prefer this library than each separate API. All features from Android Nougat are backward compatible.
+A utility library for Android to run jobs delayed in the background. Depending on the Android version either the `JobScheduler` or `AlarmManager` is getting used. You can find out in [this blog post](https://blog.evernote.com/tech/2015/10/26/unified-job-library-android/) or in [these slides](https://speakerdeck.com/vrallev/scheduling-background-job-on-android-at-the-right-time-1) why you should prefer this library than each separate API. All features from Android Nougat are backward compatible.
 
 ## Download
 
@@ -166,7 +166,7 @@ See [here](FAQ.md).
 
 ## Google Play Services
 
-This library does **not** automatically bundle the Google Play Services, because the dependency is really heavy and not all apps want to include them. That's why you need to add the dependency manually, if you want that the library uses the `GcmNetworkManager` on Android 4.
+This library does **not** automatically bundle the Google Play Services, because the dependency is really heavy and not all apps want to include them. That's why you need to add the dependency manually.
 ```groovy
 dependencies {
     compile "com.google.android.gms:play-services-gcm:latest_version"
