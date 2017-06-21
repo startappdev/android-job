@@ -30,9 +30,6 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.job.JobScheduler;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,7 +42,6 @@ import com.evernote.android.job.util.JobUtil;
 
 import net.vrallev.android.cat.CatLog;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -107,8 +103,6 @@ public final class JobManager {
                     if (!JobUtil.hasBootPermission(context)) {
                         CAT.w("No boot permission");
                     }
-
-                    sendAddJobCreatorIntent(context);
                 }
             }
         }
@@ -557,28 +551,6 @@ public final class JobManager {
                 throw new IllegalStateException("This method is only allowed to call on Android M or earlier");
             }
             mAllowSmallerIntervals = allowSmallerIntervals;
-        }
-    }
-
-    private static void sendAddJobCreatorIntent(@NonNull Context context) {
-        Intent intent = new Intent(JobCreator.ACTION_ADD_JOB_CREATOR);
-        List<ResolveInfo> resolveInfos = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-        String myPackage = context.getPackageName();
-
-        for (ResolveInfo resolveInfo : resolveInfos) {
-            ActivityInfo activityInfo = resolveInfo.activityInfo;
-            if (activityInfo == null || activityInfo.exported || !myPackage.equals(activityInfo.packageName)
-                    || TextUtils.isEmpty(activityInfo.name)) {
-                continue;
-            }
-
-            try {
-                JobCreator.AddJobCreatorReceiver receiver =
-                        (JobCreator.AddJobCreatorReceiver) Class.forName(activityInfo.name).newInstance();
-
-                receiver.addJobCreator(context, instance);
-            } catch (Exception ignored) {
-            }
         }
     }
 }
