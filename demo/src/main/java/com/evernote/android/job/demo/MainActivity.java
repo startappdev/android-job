@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.JobApi;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import net.vrallev.android.cat.Cat;
 
@@ -174,8 +173,7 @@ public class MainActivity extends Activity {
     }
 
     private void testSimple() {
-        PersistableBundleCompat extras = new PersistableBundleCompat();
-        extras.putString("key", "Hello world");
+        String data = "Hello World";
 
         mLastJobId = new JobRequest.Builder(DemoSyncJob.TAG)
                 .setExecutionWindow(3_000L, 4_000L)
@@ -183,7 +181,7 @@ public class MainActivity extends Activity {
                 .setRequiresCharging(mRequiresCharging.isChecked())
                 .setRequiresDeviceIdle(mRequiresDeviceIdle.isChecked())
                 .setRequiredNetworkType(JobRequest.NetworkType.values()[mNetworkTypeSpinner.getSelectedItemPosition()])
-                .setExtras(extras)
+                .setData(data)
                 .setRequirementsEnforced(true)
                 .setPersisted(true)
                 .build()
@@ -217,12 +215,11 @@ public class MainActivity extends Activity {
     }
 
     private void testExact() {
-        PersistableBundleCompat extras = new PersistableBundleCompat();
-        extras.putString("key", "Hello world");
+        String data = "Hello World";
 
         mLastJobId = new JobRequest.Builder(DemoSyncJob.TAG)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.EXPONENTIAL)
-                .setExtras(extras)
+                .setData(data)
                 .setExact(20_000L)
                 .setPersisted(true)
                 .setUpdateCurrent(true)

@@ -7,7 +7,6 @@ import com.evernote.android.job.test.DummyJobs;
 import com.evernote.android.job.test.JobRobolectricTestRunner;
 import com.evernote.android.job.util.JobApi;
 import com.evernote.android.job.util.JobCat;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import net.vrallev.android.cat.print.CatPrinter;
 
@@ -34,7 +33,7 @@ public class JobRequestTest extends BaseJobManagerTest {
         JobRequest request = getBuilder()
                 .setExecutionWindow(2_000L, 3_000L)
                 .setBackoffCriteria(4_000, JobRequest.BackoffPolicy.LINEAR)
-                .setExtras(new PersistableBundleCompat())
+                .setData("Test")
                 .setPersisted(true)
                 .build();
 
@@ -45,7 +44,7 @@ public class JobRequestTest extends BaseJobManagerTest {
         assertThat(request.getBackoffMs()).isEqualTo(4_000L);
         assertThat(request.getBackoffPolicy()).isEqualTo(JobRequest.BackoffPolicy.LINEAR);
         assertThat(request.isPersisted()).isTrue();
-        assertThat(request.getExtras()).isNotNull();
+        assertThat(request.getData()).isNotNull();
 
         assertThat(request.getIntervalMs()).isZero();
         assertThat(request.isExact()).isFalse();
@@ -61,7 +60,7 @@ public class JobRequestTest extends BaseJobManagerTest {
         long interval = JobRequest.MIN_INTERVAL * 5;
         JobRequest request = getBuilder()
                 .setPeriodic(interval)
-                .setExtras(new PersistableBundleCompat())
+                .setData("Test")
                 .setPersisted(true)
                 .build();
 
@@ -77,7 +76,7 @@ public class JobRequestTest extends BaseJobManagerTest {
         assertThat(request.getEndMs()).isNegative();
         assertThat(request.getBackoffMs()).isEqualTo(JobRequest.DEFAULT_BACKOFF_MS);
         assertThat(request.getBackoffPolicy()).isEqualTo(JobRequest.DEFAULT_BACKOFF_POLICY);
-        assertThat(request.getExtras()).isNotNull();
+        assertThat(request.getData()).isNotNull();
         assertThat(request.isExact()).isFalse();
         assertThat(request.requiredNetworkType()).isEqualTo(JobRequest.DEFAULT_NETWORK_TYPE);
         assertThat(request.requirementsEnforced()).isFalse();
@@ -109,7 +108,7 @@ public class JobRequestTest extends BaseJobManagerTest {
     public void testExact() {
         JobRequest request = getBuilder()
                 .setBackoffCriteria(4_000, JobRequest.BackoffPolicy.LINEAR)
-                .setExtras(new PersistableBundleCompat())
+                .setData("Test")
                 .setPersisted(true)
                 .setExact(2_000L)
                 .build();
@@ -121,7 +120,7 @@ public class JobRequestTest extends BaseJobManagerTest {
         assertThat(request.getBackoffMs()).isEqualTo(4_000L);
         assertThat(request.getBackoffPolicy()).isEqualTo(JobRequest.BackoffPolicy.LINEAR);
         assertThat(request.isPersisted()).isTrue();
-        assertThat(request.getExtras()).isNotNull();
+        assertThat(request.getData()).isNotNull();
         assertThat(request.isExact()).isTrue();
 
         assertThat(request.getIntervalMs()).isZero();

@@ -1,7 +1,6 @@
 package com.evernote.android.job.demo;
 
 import com.evernote.android.job.JobRequest;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import java.util.concurrent.TimeUnit;
 
@@ -58,9 +57,8 @@ public final class UnitTestDatabaseCreator {
                         .setPersisted(random());
 
                 if (random()) {
-                    PersistableBundleCompat extras = new PersistableBundleCompat();
-                    extras.putString("key", "Hello world");
-                    builder.setExtras(extras);
+                    String extras = "Hello world";
+                    builder.setData(extras);
                 }
 
                 builder.build().schedule();
@@ -77,9 +75,8 @@ public final class UnitTestDatabaseCreator {
                         .setPersisted(random());
 
                 if (random()) {
-                    PersistableBundleCompat extras = new PersistableBundleCompat();
-                    extras.putString("key", "Hello world");
-                    builder.setExtras(extras);
+                    String extras = "Hello world";
+                    builder.setData(extras);
                 }
 
                 builder.build().schedule();
@@ -99,9 +96,8 @@ public final class UnitTestDatabaseCreator {
                         .setPersisted(random());
 
                 if (random()) {
-                    PersistableBundleCompat extras = new PersistableBundleCompat();
-                    extras.putString("key", "Hello world");
-                    builder.setExtras(extras);
+                    String extras = "Hello world";
+                    builder.setData(extras);
                 }
 
                 builder.build().schedule();
@@ -121,9 +117,8 @@ public final class UnitTestDatabaseCreator {
                         .setPersisted(random());
 
                 if (random()) {
-                    PersistableBundleCompat extras = new PersistableBundleCompat();
-                    extras.putString("key", "Hello world");
-                    builder.setExtras(extras);
+                    String extras = "Hello world";
+                    builder.setData(extras);
                 }
                 if (random()) {
                     builder.setPeriodic(JobRequest.MIN_INTERVAL);

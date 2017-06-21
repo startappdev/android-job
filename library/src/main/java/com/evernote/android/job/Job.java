@@ -36,7 +36,6 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.evernote.android.job.util.Device;
 import com.evernote.android.job.util.JobCat;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import net.vrallev.android.cat.CatLog;
 
@@ -360,7 +359,7 @@ public abstract class Job {
     public static final class Params {
 
         private final JobRequest mRequest;
-        private PersistableBundleCompat mExtras;
+        private String mData;
 
         private Params(@NonNull JobRequest request) {
             mRequest = request;
@@ -548,14 +547,8 @@ public abstract class Job {
          * @return Extra arguments for this {@link Job}. Never returns {@code null}.
          */
         @NonNull
-        public PersistableBundleCompat getExtras() {
-            if (mExtras == null) {
-                mExtras = mRequest.getExtras();
-                if (mExtras == null) {
-                    mExtras = new PersistableBundleCompat();
-                }
-            }
-            return mExtras;
+        public String getData() {
+            return mRequest.getData();
         }
 
         /*package*/ JobRequest getRequest() {

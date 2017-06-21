@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.evernote.android.job.test.JobRobolectricTestRunner;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -233,7 +232,7 @@ public class DatabaseManualUpgradeTest extends BaseJobManagerTest {
             contentValues.put(JobStorage.COLUMN_EXACT, false);
             contentValues.put(JobStorage.COLUMN_NETWORK_TYPE, JobRequest.DEFAULT_NETWORK_TYPE.toString());
 
-            contentValues.put(JobStorage.COLUMN_EXTRAS, new PersistableBundleCompat().saveToXml());
+            contentValues.put(JobStorage.COLUMN_EXTRAS, "");
             contentValues.put(JobStorage.COLUMN_PERSISTED, false);
 
             contentValues.put(JobStorage.COLUMN_NUM_FAILURES, 0);

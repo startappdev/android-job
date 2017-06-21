@@ -30,13 +30,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.evernote.android.job.util.JobApi;
 import com.evernote.android.job.util.JobCat;
 import com.evernote.android.job.util.JobPreconditions;
 import com.evernote.android.job.util.JobUtil;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
 
 import net.vrallev.android.cat.CatLog;
 
@@ -235,13 +233,10 @@ public final class JobRequest {
     }
 
     /**
-     * @return The extras for this job.
+     * @return The data for this job.
      */
-    public PersistableBundleCompat getExtras() {
-        if (mBuilder.mExtras == null && !TextUtils.isEmpty(mBuilder.mExtrasXml)) {
-            mBuilder.mExtras = PersistableBundleCompat.fromXml(mBuilder.mExtrasXml);
-        }
-        return mBuilder.mExtras;
+    public String getData() {
+        return mBuilder.mData;
     }
 
     /**
@@ -493,8 +488,7 @@ public final class JobRequest {
         private boolean mExact;
         private NetworkType mNetworkType;
 
-        private PersistableBundleCompat mExtras;
-        private String mExtrasXml;
+        private String mData;
 
         private boolean mPersisted;
 
@@ -556,7 +550,7 @@ public final class JobRequest {
                 mNetworkType = DEFAULT_NETWORK_TYPE;
             }
 
-            mExtrasXml = cursor.getString(cursor.getColumnIndex(JobStorage.COLUMN_EXTRAS));
+            mData = cursor.getString(cursor.getColumnIndex(JobStorage.COLUMN_EXTRAS));
 
             mPersisted = cursor.getInt(cursor.getColumnIndex(JobStorage.COLUMN_PERSISTED)) > 0;
         }
@@ -585,8 +579,7 @@ public final class JobRequest {
             mExact = builder.mExact;
             mNetworkType = builder.mNetworkType;
 
-            mExtras = builder.mExtras;
-            mExtrasXml = builder.mExtrasXml;
+            mData = builder.mData;
 
             mPersisted = builder.mPersisted;
 
@@ -612,11 +605,7 @@ public final class JobRequest {
             contentValues.put(JobStorage.COLUMN_EXACT, mExact);
             contentValues.put(JobStorage.COLUMN_NETWORK_TYPE, mNetworkType.toString());
 
-            if (mExtras != null) {
-                contentValues.put(JobStorage.COLUMN_EXTRAS, mExtras.saveToXml());
-            } else if (!TextUtils.isEmpty(mExtrasXml)) {
-                contentValues.put(JobStorage.COLUMN_EXTRAS, mExtrasXml);
-            }
+            contentValues.put(JobStorage.COLUMN_EXTRAS, mData);
             contentValues.put(JobStorage.COLUMN_PERSISTED, mPersisted);
         }
 
@@ -668,17 +657,12 @@ public final class JobRequest {
         }
 
         /**
-         * Set optional extras. This is persisted, so only primitive types are allowed.
+         * Set optional data.
          *
-         * @param extras Bundle containing extras which you can retrieve with {@link Job.Params#getExtras()}.
+         * @param data String
          */
-        public Builder setExtras(@Nullable PersistableBundleCompat extras) {
-            if (extras == null) {
-                mExtras = null;
-                mExtrasXml = null;
-            } else {
-                mExtras = new PersistableBundleCompat(extras);
-            }
+        public Builder setData(@Nullable String data) {
+            mData = data;
             return this;
         }
 
