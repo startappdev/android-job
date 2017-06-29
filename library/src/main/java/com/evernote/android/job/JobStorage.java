@@ -60,7 +60,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
     private static final String FAILED_DELETE_IDS = "FAILED_DELETE_IDS";
 
-    public static final String PREF_FILE_NAME = "evernote_jobs";
+    public static final String PREF_FILE_NAME = "startapp_jobs";
     public static final String DATABASE_NAME = PREF_FILE_NAME + ".db";
     public static final int DATABASE_VERSION = 4;
 
